@@ -11,7 +11,7 @@ void grid::customDraw(){
 	//give a saturation and lightness
 	ofSetColor(255, 100, 100);
 
-	ofDrawGrid(100.0f);
+	ofDrawGrid(50.0f);
 
 	ofPopStyle();
 }

@@ -19,26 +19,31 @@ void ofApp::setup(){
     material.setSpecularColor(ofColor(255, 255, 255, 255));
     
     
+    image.load("flow.jpg");
+    
+    ////////////////////////////////////////
+    drawGrid = false;
     
     iMainCamera = 0;
     bCamParent = false;
+    
     
     
     cameras[0] = &cam;
     
     
     // front
-    camFront.scale = 20;
+    camFront.scale = 150;
     cameras[1] = &camFront;
     
     // top
-    camTop.scale = 20;
+    camTop.scale = 150;
     camTop.tilt(-90);
     cameras[2] = &camTop;
     
     // left
-    camLeft.scale = 20;
-    camLeft.pan(-90);
+    camLeft.scale = 150;
+    camLeft.pan(90);
     cameras[3] = &camLeft;
     
     //
@@ -144,11 +149,11 @@ void ofApp::draw(){
     
     
     
-    ofDisableDepthTest();
-    ofPushStyle();
-    ofSetColor(100, 100, 100);
-    ofDrawRectangle(viewGrid[iMainCamera]);
-    ofPopStyle();
+//    ofDisableDepthTest();
+//    ofPushStyle();
+//    ofSetColor(100, 100, 100);
+//    ofDrawRectangle(viewGrid[iMainCamera]);
+//    ofPopStyle();
     ofEnableDepthTest();
     
     
@@ -158,8 +163,6 @@ void ofApp::draw(){
     // draw main viewport
     cameras[iMainCamera]->begin(viewMain);
     drawScene(iMainCamera);
-    
-    
     cameras[iMainCamera]->end();
     
     // draw side viewports
@@ -172,25 +175,26 @@ void ofApp::draw(){
     
     
     
-    cam.begin();
+//    cam.begin();
+//    
+//    ofPushMatrix();
+//
+//    ofRotateZ(rotateX);
+//    ofRotateX(rotateY);
+//    material.begin();
+//    box.draw();
+//    material.end();
+//    
+//    ofPopMatrix();
+//    
+//    cam.end();
     
-    ofPushMatrix();
-
-    ofRotateZ(rotateX);
-    ofRotateX(rotateY);
-    material.begin();
-    box.draw();
-    material.end();
-    
-    ofPopMatrix();
-    
-    cam.end();
-    
-    
-    
-    
+    ofPushStyle();
+    glDepthFunc(GL_ALWAYS);
     
     // draw outlines on views
+    
+    ofDisableLighting();
     ofSetLineWidth(5);
     ofNoFill();
     ofSetColor(255, 255, 255);
@@ -204,15 +208,37 @@ void ofApp::draw(){
     // restore the GL depth function
     glDepthFunc(GL_LESS);
     ofPopStyle();
-
     
 
+    ofDisableDepthTest();
+    image.draw(viewGrid[3]);
+    
 
 }
 
 void ofApp::drawScene(int iCameraDraw){
     
- //   nodeGrid.draw();
+    if(drawGrid) nodeGrid.draw();
+    
+//        ofPushMatrix();
+    ofEnableLighting();
+    if(iCameraDraw == 0){
+        
+        ofRotateZ(rotateX);
+        ofRotateX(rotateY);
+        material.begin();
+        cone.draw();
+        material.end();
+
+
+    }else{
+        ofRotateZ(rotateX);
+        ofRotateX(rotateY);
+        material.begin();
+        box.draw();
+        material.end();
+    }
+//        ofPopMatrix();
     
     if(iCameraDraw != 0){
         
@@ -251,9 +277,10 @@ void ofApp::drawScene(int iCameraDraw){
         //  to OpenGL, and apply that matrix to
         //  the current OpenGL transform
         ofMultMatrix( inverseCameraMatrix );
+        
         ofNoFill();
         // i.e. a box -1, -1, -1 to +1, +1, +1
-        ofDrawBox(0, 0, 0, 2.0f);
+ //       ofDrawBox(0, 0, 0, 2.0f);
         //
         //--
         
@@ -264,7 +291,17 @@ void ofApp::drawScene(int iCameraDraw){
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
+    if(key >= '1' && key <= '4'){
+        iMainCamera = key - '1';
+    }
     
+    if(key == 'f'){
+        ofToggleFullscreen();
+    }
+    
+    if(key == 'g'){
+        drawGrid = !drawGrid;
+    }
 }
 
 //--------------------------------------------------------------

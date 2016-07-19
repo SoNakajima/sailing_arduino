@@ -34,6 +34,7 @@ class ofApp : public ofBaseApp{
 
     
 		ofBoxPrimitive box;
+    ofConePrimitive cone;
     
     ofArduino ard;
     
@@ -62,5 +63,9 @@ class ofApp : public ofBaseApp{
     ofRectangle viewGrid[N_CAMERAS];
 
     grid nodeGrid;
+    
+    bool drawGrid;
+    
+    ofImage image;
     
 };
