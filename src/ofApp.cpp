@@ -3,24 +3,27 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
     
+    ofSetWindowShape(1200, 800);
     ofSetVerticalSync(true);
 //    	ard.connect("/dev/cu.usbmodem1421", 9600);
     
     ard.connect("/dev/cu.usbmodem1421", 57600);
-//    ofAddListener(ard.EInitialized, this, ofApp::setupArduino);
-
     ofAddListener(ard.EInitialized, this, &ofApp::setupArduino);
     bSetupArduino	= false;	// flag so we setup arduino when its ready, you don't need to touch this :)
     
     setupLight();
+    cone.set(30,100);
     
     material.setShininess( 120 );
     // the light highlight of the material //
     material.setSpecularColor(ofColor(255, 255, 255, 255));
     
     
-    image.load("flow.jpg");
+    image2.load("fluid.jpg");
+    image.load("topCam.png");
     
+    count = 0;
+    photoChange = false;
     ////////////////////////////////////////
     drawGrid = false;
     
@@ -76,10 +79,10 @@ void ofApp::setup(){
 
 void ofApp::setupLight(){
     ofSetSmoothLighting(true);
-    pointLight.setDiffuseColor( ofFloatColor(.85, .85, .55) );
+    pointLight.setDiffuseColor( ofFloatColor(.85, .85, .65) );
     pointLight.setSpecularColor( ofFloatColor(1.f, 1.f, 1.f));
     
-    pointLight2.setDiffuseColor( ofFloatColor( 238.f/255.f, 57.f/255.f, 135.f/255.f ));
+    pointLight2.setDiffuseColor( ofFloatColor( 238.f/255.f, 120.f/255.f, 135.f/255.f ));
     pointLight2.setSpecularColor(ofFloatColor(.8f, .8f, .9f));
     
     pointLight3.setDiffuseColor( ofFloatColor(19.f/255.f,94.f/255.f,77.f/255.f) );
@@ -211,8 +214,15 @@ void ofApp::draw(){
     
 
     ofDisableDepthTest();
-    image.draw(viewGrid[3]);
+    if(photoChange){
+        image.draw(viewGrid[3]);
+    }else{
+        image2.draw(viewGrid[3]);
+    }
     
+    count++;
+    
+    if((count%180) == 0) photoChange = !photoChange;
 
 }
 
@@ -220,17 +230,17 @@ void ofApp::drawScene(int iCameraDraw){
     
     if(drawGrid) nodeGrid.draw();
     
-//        ofPushMatrix();
+
     ofEnableLighting();
     if(iCameraDraw == 0){
         
+        
         ofRotateZ(rotateX);
         ofRotateX(rotateY);
+        ofTranslate(0, 50);
         material.begin();
         cone.draw();
         material.end();
-
-
     }else{
         ofRotateZ(rotateX);
         ofRotateX(rotateY);
@@ -238,7 +248,7 @@ void ofApp::drawScene(int iCameraDraw){
         box.draw();
         material.end();
     }
-//        ofPopMatrix();
+
     
     if(iCameraDraw != 0){
         

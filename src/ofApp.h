@@ -26,14 +26,14 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
     
-    void setupLight();
     
+    void setupLight();
 
     int rotateX, rotateY, rotateZ;
-        ofEasyCam cam;
+    ofEasyCam cam;
 
     
-		ofBoxPrimitive box;
+    ofBoxPrimitive box;
     ofConePrimitive cone;
     
     ofArduino ard;
@@ -66,6 +66,9 @@ class ofApp : public ofBaseApp{
     
     bool drawGrid;
     
-    ofImage image;
+    ofImage image,image2;
+    
+    int count;
+    bool photoChange;
     
 };
